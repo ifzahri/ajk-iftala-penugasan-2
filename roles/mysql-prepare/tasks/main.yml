@@ -1,0 +1,30 @@
+- block:
+    - name: Install MySQL
+      apt:
+        name:
+          - mysql-server
+        state: present
+
+    - name: Change MySQL root password
+      shell: >
+        mysql -u root -NBe 'ALTER USER "root"@"localhost" IDENTIFIED WITH mysql_native_password BY "{{ mysql_root_password }}"'
+      changed_when: false
+      ignore_errors: true
+
+    - name: Change mysql max_connections to support more concurrent users
+      ini_file:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        section: mysqld
+        option: max_connections
+        value: "500"
+
+    - name: Restart mysql
+      service:
+        name: mysql
+        state: restarted
+    
+    - name: Allow Port 3306 using ufw
+      ufw:
+        rule: allow
+        port: 3306
+        proto: tcp

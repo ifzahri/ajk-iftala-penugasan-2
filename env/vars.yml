@@ -1,0 +1,8 @@
+# Repo
+frontend_src: https://github.com/elshiraphine/fe-todo
+backend_src: https://github.com/elshiraphine/be-todo
+
+# Mysql
+mysql_database: laravel
+mysql_user: root
+mysql_root_password: root
