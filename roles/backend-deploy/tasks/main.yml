@@ -1,0 +1,37 @@
+- name: Generate nginx backend site
+  template:
+    src: backend.conf.j2
+    dest: /etc/nginx/sites-available/backend
+  notify: Reload Nginx
+
+- name: Enable backend site
+  file:
+    src: /etc/nginx/sites-available/backend
+    dest: /etc/nginx/sites-enabled/backend
+    state: link
+  notify: Reload Nginx
+
+- name: Check nginx
+  command: nginx -t
+  register: resultcheck
+  ignore_errors: true
+
+- name: Show check results
+  debug:
+    var: resultcheck.stdout_lines
+
+- name: Start backend
+  command: php artisan serve
+  args:
+    chdir: "{{ backend_dir }}"
+
+- name: Test backend with curl
+  url:
+    url: http://localhost:8000
+    method: GET
+    return_content: yes
+  register: result
+
+- name: Show results
+  debug:
+    var: result.content

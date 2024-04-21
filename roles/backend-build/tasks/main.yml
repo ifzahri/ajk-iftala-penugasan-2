@@ -1,0 +1,96 @@
+- name: Add PHP PPA
+  become: true
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+
+- name: Update apt
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Install PHP 8.1 and dependencies
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  loop:
+    - php8.1
+    - php8.1-cli
+    - php8.1-fpm
+    - php8.1-mbstring
+    - php8.1-xml
+    - php8.1-mysql
+    - php8.1-curl
+    - php8.1-zip
+    - php8.1-gd
+    - php8.1-common
+    - php8.1-dev
+
+- name: Install Composer
+  apt: 
+    name: composer
+    state: present
+
+- name: Clone from repo
+  git:
+    repo: "{{ backend_src }}"
+    dest: "{{ backend_dir }}"
+    clone: yes
+    update: yes
+
+- name: Check composer and PHP version
+  chdir: {{ backend_dir }}
+  command: composer --version && php -v
+  register: resultdependencies
+
+- name: Show dependencies
+  debug:
+    var: resultdependencies.stdout_lines
+
+- name: Change ownership
+  file:
+    path: "{{ backend_dir }}"
+    owner: "www-data"
+    group: "www-data"
+    recurse: yes
+
+- name: Install composer packages
+  command: composer install
+  args:
+    chdir: "{{ backend_dir }}"
+    creates: "{{ backend_dir }}/vendor"
+
+- name: Copy env from .env.example
+  command: cp .env.example .env
+  args:
+    chdir: "{{ backend_dir }}"
+
+# Change db_name, db_user, db_password in .env
+- name: Change .env
+  lineinfile:
+    path: "{{ backend_dir }}/.env"
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  loop:
+    - { regexp: '^DB_DATABASE=', line: 'DB_DATABASE={{ mysql_database }}' }
+    - { regexp: '^DB_USERNAME=', line: 'DB_USERNAME={{ mysql_user }}' }
+    - { regexp: '^DB_PASSWORD=', line: 'DB_PASSWORD={{ mysql_password }}' }
+
+- name: Generate key
+  command: php artisan key:generate
+  args:
+    chdir: "{{ backend_dir }}"
+
+- name: Generate secret
+  command: php artisan jwt:secret
+  args:
+    chdir: "{{ backend_dir }}"
+
+
+
+
+
+
+

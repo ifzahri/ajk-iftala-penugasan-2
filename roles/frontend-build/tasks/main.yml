@@ -1,0 +1,31 @@
+- name: Clone from repo
+  git:
+    repo: "{{ frontend_src }}"
+    dest: "{{ frontend_dir }}"
+    clone: yes
+    update: yes
+
+- name: Check node and yarn version
+  command: node -v && yarn -v
+  register: resultdependencies
+
+- name: Show dependencies
+  debug:
+    var: resultdependencies.stdout_lines
+
+- name: Change ownership
+  file:
+    path: "{{ frontend_dir }}"
+    owner: "www-data"
+    group: "www-data"
+    recurse: yes
+ 
+- name: Install yarn packages
+  command: yarn install
+  args:
+    chdir: "{{ frontend_dir }}"
+  
+- name: Build frontend
+  command: yarn build
+  args:
+    chdir: "{{ frontend_dir }}"

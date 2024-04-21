@@ -1,0 +1,15 @@
+- name: Dump autoload
+  command: composer dump-autoload
+  args:
+    chdir: "{{ backend_dir }}"
+
+- name: Migrate database
+  command: php artisan migrate
+  args:
+    chdir: "{{ backend_dir }}"
+
+- name: Seed database
+  command: php artisan db:seed
+  args:
+    chdir: "{{ backend_dir }}"
+

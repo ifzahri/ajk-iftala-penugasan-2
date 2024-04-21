@@ -1,0 +1,38 @@
+- name: Generate nginx site config
+  template:
+    src: roles/frontend-deploy/templates/nginx-frontend.j2
+    dest: /etc/nginx/sites-available/frontend
+  notify: Reload Nginx
+
+- name: Enable frontend site
+  file:
+    src: /etc/nginx/sites-available/frontend
+    dest: /etc/nginx/sites-enabled/frontend
+    state: link
+  notify: Reload Nginx
+
+- name: Check nginx
+  command: nginx -t
+  register: resultcheck
+  ignore_errors: true
+
+- name: Show check results
+  debug:
+    var: resultcheck.stdout_lines
+
+- name: Start frontend
+  yarn:
+    command: start
+    chdir: "{{ frontend_dir }}"
+  
+- name: Test frontend with curl
+  url:
+    url: http://localhost
+    method: GET
+    return_content: yes
+  register: result
+
+- name: Show results
+  debug:
+    var: result.content
+   
