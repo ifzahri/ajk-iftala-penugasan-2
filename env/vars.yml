@@ -1,7 +1,9 @@
+# Shell
+user: root
+
 # Repo
 frontend_src: https://github.com/elshiraphine/fe-todo
 frontend_dir: /var/www/frontend
-
 backend_src: https://github.com/elshiraphine/be-todo
 backend_dir: /var/www/backend
 
@@ -9,4 +11,4 @@ backend_dir: /var/www/backend
 mysql_database: laravel
 mysql_user: root
 mysql_password: root
-mysql_root_password: root
+mysql_root_password: "root"

@@ -2,14 +2,19 @@
     - name: Install MySQL
       apt:
         name:
-          - mysql-server
+          - mariadb-server
         state: present
+      become: true
 
-    - name: Change MySQL root password
-      shell: >
-        mysql -u root -NBe 'ALTER USER "root"@"localhost" IDENTIFIED WITH mysql_native_password BY "{{ mysql_root_password }}"'
-      changed_when: false
-      ignore_errors: true
+    # - name: Debug mysql_root_password
+    #   debug:
+    #     var: mysql_root_password
+
+    # - name: Change MySQL root password
+    #   shell: >
+    #     mysql -u root -NBe 'ALTER USER "root"@"localhost" IDENTIFIED WITH mysql_native_password BY "{{ mysql_root_password }}"'
+    #   changed_when: false
+    # ignore_errors: true
 
     - name: Change mysql max_connections to support more concurrent users
       ini_file:
@@ -17,14 +22,23 @@
         section: mysqld
         option: max_connections
         value: "500"
+      become: true
 
     - name: Restart mysql
       service:
         name: mysql
         state: restarted
+      become: true
+
+    - name: Install ufw
+      apt:
+        name: ufw
+        state: present
+      become: true
     
     - name: Allow Port 3306 using ufw
-      ufw:
+      community.general.ufw:
         rule: allow
         port: 3306
         proto: tcp
+      become: true

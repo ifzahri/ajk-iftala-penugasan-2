@@ -1,10 +1,10 @@
 - hosts: localhost
   gather_facts: false
+  become: true
+  vars_files:
+    - env/vars/main.yml
   roles: 
     - name: mysql-prepare
       vars:
         mysql_root_password: "{{ mysql_root_password }}"
-        mysql_user: "{{ mysql_user }}"
-        mysql_password: "{{ mysql_password }}"
-        mysql_database: "{{ mysql_database }}"
     - name: nginx-prepare
