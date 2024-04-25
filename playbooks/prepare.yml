@@ -1,8 +1,8 @@
-- hosts: localhost
-  gather_facts: false
+- hosts: all
+  gather_facts: true
   become: true
   vars_files:
-    - env/vars/main.yml
+    - env/vars.yml
   roles: 
     - name: mysql-prepare
       vars:

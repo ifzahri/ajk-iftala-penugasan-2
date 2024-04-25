@@ -1,38 +1,22 @@
-- name: Install nvm
-  shell: >
-    curl https://raw.githubusercontent.com/creationix/nvm/v0.7.0/install.sh | sh
-    creates=/home/{{ user }}/.nvm/nvm.sh
+- name: Install NVM
+  shell: |
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc
+    echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion' >> ~/.bashrc
 
-- name: Install node and set version
-  shell: >
-    /bin/bash -c "source ~/.nvm/nvm.sh && nvm install 0.10 && nvm alias default 0.10"
-    creates=/home/{{ user }}/.nvm/alias
+- name: Source nvm
+  shell: bash -c ". ~/.bashrc"
 
-- name: Yarn GPG
-  apt_key:
-    url: https://dl.yarnpkg.com/debian/pubkey.gpg
-    state: present
+- name: Install Node.js version 18
+  shell: |
+    bash -c "source ~/.nvm/nvm.sh && nvm install 18"
 
-- name: Importing Yarn Package
-  copy:
-    content: "deb https://dl.yarnpkg.com/debian/ stable main"
-    dest: /etc/apt/sources.list.d/yarn.list
+- name: Set Node.js version 18 as default
+  shell: bash -c "source ~/.nvm/nvm.sh && nvm alias default 18"
 
-- name: Installing Nodejs + Yarn
-  apt:
-    name:
-      - yarn
-    update_cache: true
-
-- name: Clone from repo
-  git:
-    repo: "{{ frontend_src }}"
-    dest: "{{ frontend_dir }}"
-    clone: yes
-    update: yes
-
-- name: Check node and yarn version
-  command: node -v && yarn -v
+- name: Set Node.js version 18 as default
+  shell: bash -c "source ~/.nvm/nvm.sh && node -v"
   register: resultdependencies
 
 - name: Show dependencies
@@ -42,16 +26,43 @@
 - name: Change ownership
   file:
     path: "{{ frontend_dir }}"
-    owner: "www-data"
-    group: "www-data"
+    owner: "{{ user }}"
+    group: "{{ user }}"
     recurse: yes
+
+- name: Install yarn
+  shell: bash -c "source ~/.nvm/nvm.sh && npm install -g yarn"
+
+- name: Clone from repo
+  git:
+    repo: "{{ frontend_src }}"
+    dest: "{{ frontend_dir }}"
+    clone: yes
+    force: yes
+    update: yes
+
+- name: Remove package-lock.json
+  file:
+    path: "{{ frontend_dir }}/package-lock.json"
+    state: absent
  
 - name: Install yarn packages
-  command: yarn install
+  shell: bash -c "source ~/.nvm/nvm.sh && yarn install"
   args:
     chdir: "{{ frontend_dir }}"
+  register: resultinstall
+
+- name: Show install results
+  debug:
+    var: resultinstall.stdout_lines
   
 - name: Build frontend
-  command: yarn build
+  shell: bash -c "source ~/.nvm/nvm.sh && yarn build"
   args:
     chdir: "{{ frontend_dir }}"
+  register: resultbuild
+
+- name: Show build results
+  debug:
+    var: resultbuild.stdout_lines
+

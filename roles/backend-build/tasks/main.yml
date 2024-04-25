@@ -41,7 +41,6 @@
     update: yes
 
 - name: Check composer and PHP version
-  chdir: {{ backend_dir }}
   command: composer --version && php -v
   register: resultdependencies
 

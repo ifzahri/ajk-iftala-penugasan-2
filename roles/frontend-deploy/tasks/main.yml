@@ -1,6 +1,6 @@
 - name: Generate nginx site config
   template:
-    src: roles/frontend-deploy/templates/nginx-frontend.j2
+    src: nginx-frontend.j2
     dest: /etc/nginx/sites-available/frontend
   notify: Reload Nginx
 
@@ -14,20 +14,24 @@
 - name: Check nginx
   command: nginx -t
   register: resultcheck
-  ignore_errors: true
 
 - name: Show check results
   debug:
     var: resultcheck.stdout_lines
 
 - name: Start frontend
-  yarn:
-    command: start
+  shell: bash -c "source ~/.nvm/nvm.sh && yarn start &"
+  args:
     chdir: "{{ frontend_dir }}"
+  register: resultstart
+
+- name: Show start results
+  debug:
+    var: resultstart.stdout_lines
   
 - name: Test frontend with curl
-  url:
-    url: http://localhost
+  uri:
+    url: http://localhost:3000
     method: GET
     return_content: yes
   register: result

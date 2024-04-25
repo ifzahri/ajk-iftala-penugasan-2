@@ -1,0 +1,6 @@
+- import_playbook: prepare.yml
+- hosts: localhost
+  vars_files:
+    - env/vars.yml
+  gather_facts: false
+  become: true
