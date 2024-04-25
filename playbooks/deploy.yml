@@ -4,6 +4,9 @@
   vars_files:
     - env/vars.yml
   roles: 
-    - name: frontend-deploy
+    # - name: frontend-deploy
+    #   vars:
+    #     frontend_dir: "/var/www/frontend"
+    - name: backend-deploy
       vars:
-        frontend_dir: "/var/www/frontend"
+        backend_dir: "/var/www/backend"

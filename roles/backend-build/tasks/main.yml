@@ -1,9 +1,3 @@
-- name: Add PHP PPA
-  become: true
-  apt_repository:
-    repo: ppa:ondrej/php
-    state: present
-
 - name: Update apt
   become: true
   apt:
@@ -66,7 +60,6 @@
   args:
     chdir: "{{ backend_dir }}"
 
-# Change db_name, db_user, db_password in .env
 - name: Change .env
   lineinfile:
     path: "{{ backend_dir }}/.env"

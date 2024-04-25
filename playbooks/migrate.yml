@@ -1,0 +1,9 @@
+- hosts: localhost
+  gather_facts: false
+  become: true
+  vars_files:
+    - env/vars.yml
+  roles: 
+    - name: backend-migrate
+      vars:
+        backend_dir: "/var/www/backend"

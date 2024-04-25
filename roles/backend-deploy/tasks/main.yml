@@ -1,6 +1,6 @@
 - name: Generate nginx backend site
   template:
-    src: backend.conf.j2
+    src: nginx-backend.j2
     dest: /etc/nginx/sites-available/backend
   notify: Reload Nginx
 
@@ -20,13 +20,18 @@
   debug:
     var: resultcheck.stdout_lines
 
+# - name: Start backend
+#   command: "php artisan serve --quiet"
+#   args:
+#     chdir: "{{ backend_dir }}"
+
 - name: Start backend
-  command: php artisan serve
+  command: "php -S localhost:8000 -t public"
   args:
     chdir: "{{ backend_dir }}"
 
 - name: Test backend with curl
-  url:
+  uri:
     url: http://localhost:8000
     method: GET
     return_content: yes
