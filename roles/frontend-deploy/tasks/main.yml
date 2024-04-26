@@ -15,13 +15,14 @@
     state: link
   notify: Reload Nginx
 
-- name: Check nginx
+- name: Check nginx configuration
   command: nginx -t
-  register: resultcheck
+  register: resultnginx
 
-- name: Show check results
+- name: Show nginx result
   debug:
-    var: resultcheck.stdout_lines
+    msg: "{{ resultnginx }}"
+  when: resultnginx.stdout.find('successful') == -1
 
 - name: Start frontend
   shell: bash -c "source ~/.nvm/nvm.sh && yarn start &"

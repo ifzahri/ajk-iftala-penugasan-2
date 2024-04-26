@@ -41,3 +41,12 @@
     src: nginx.conf.j2
     dest: /etc/nginx/conf.d/ansible.conf
   notify: Reload Nginx
+
+- name: Check nginx configuration
+  command: nginx -t
+  register: resultnginx
+
+- name: Show nginx result
+  debug:
+    msg: "{{ resultnginx }}"
+  when: resultnginx.stdout.find('successful') == -1

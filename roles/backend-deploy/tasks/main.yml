@@ -15,27 +15,16 @@
     state: link
   notify: Reload Nginx
 
-- name: Check nginx
+- name: Check nginx configuration
   command: nginx -t
-  register: resultcheck
-  ignore_errors: true
+  register: resultnginx
 
-- name: Show check results
+- name: Show nginx result
   debug:
-    var: resultcheck.stdout_lines
+    msg: "{{ resultnginx }}"
+  when: resultnginx.stdout.find('successful') == -1
 
 - name: Start backend
-  command: "php artisan serve --quiet"
+  command: "php artisan serve"
   args:
     chdir: "{{ backend_dir }}"
-
-- name: Test backend with curl
-  uri:
-    url: http://localhost:8000
-    method: GET
-    return_content: yes
-  register: result
-
-- name: Show results
-  debug:
-    var: result.content
