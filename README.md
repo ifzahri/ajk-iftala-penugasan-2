@@ -109,3 +109,5 @@ The deployment process is divided into several stages:
 ![Screenshot 2024-04-26 003728](https://github.com/ifzahri/ajk-iftala-penugasan-2/assets/59218445/0c34b36c-c96f-42df-a9e1-c621b32ea31f)
 
 ![Screenshot 2024-04-26 171712](https://github.com/ifzahri/ajk-iftala-penugasan-2/assets/59218445/ebf147c4-d287-46ce-8b1b-acb8f129aea7)
+
+![Screenshot 2024-04-26 000546](https://github.com/ifzahri/ajk-iftala-penugasan-2/assets/59218445/75def189-cf20-4097-97ac-9439f45a437e)
