@@ -1,3 +1,7 @@
+- name: Check variables
+  debug:
+    msg: "{{ user }} | {{ frontend_dir }} | {{ frontend_src }}"
+
 - name: Install NVM
   shell: |
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
@@ -45,7 +49,7 @@
   file:
     path: "{{ frontend_dir }}/package-lock.json"
     state: absent
- 
+
 - name: Install yarn packages
   shell: bash -c "source ~/.nvm/nvm.sh && yarn install"
   args:
@@ -55,7 +59,7 @@
 - name: Show install results
   debug:
     var: resultinstall.stdout_lines
-  
+
 - name: Build frontend
   shell: bash -c "source ~/.nvm/nvm.sh && yarn build"
   args:
@@ -65,4 +69,3 @@
 - name: Show build results
   debug:
     var: resultbuild.stdout_lines
-

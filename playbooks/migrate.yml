@@ -5,5 +5,3 @@
     - env/vars.yml
   roles: 
     - name: backend-migrate
-      vars:
-        backend_dir: "/var/www/backend"

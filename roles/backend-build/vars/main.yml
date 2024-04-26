@@ -1,0 +1,5 @@
+backend_dir: "{{ (lookup('file', '../env/vars.yml') | from_yaml).backend_dir }}"
+backend_src: "{{ (lookup('file', '../env/vars.yml') | from_yaml).backend_src }}"
+mysql_database: "{{ (lookup('file', '../env/vars.yml') | from_yaml).mysql_database }}"
+mysql_user: "{{ (lookup('file', '../env/vars.yml') | from_yaml).mysql_user }}"
+mysql_password: "{{ (lookup('file', '../env/vars.yml') | from_yaml).mysql_password }}"

@@ -1,3 +1,7 @@
+- name: Check variables
+  debug:
+    var: backend_dir
+
 - name: Dump autoload
   command: composer dump-autoload
   args:

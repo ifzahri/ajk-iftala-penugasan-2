@@ -1,0 +1,1 @@
+mysql_root_password: "{{ (lookup('file', '../env/vars.yml') | from_yaml).mysql_root_password }}"

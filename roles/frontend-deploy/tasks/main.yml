@@ -1,3 +1,7 @@
+- name: Check variables
+  debug: 
+    var: frontend_dir
+
 - name: Generate nginx site config
   template:
     src: nginx-frontend.j2

@@ -1,3 +1,7 @@
+- name: Check variables
+  debug: 
+    var: backend_dir
+
 - name: Generate nginx backend site
   template:
     src: nginx-backend.j2
@@ -20,13 +24,8 @@
   debug:
     var: resultcheck.stdout_lines
 
-# - name: Start backend
-#   command: "php artisan serve --quiet"
-#   args:
-#     chdir: "{{ backend_dir }}"
-
 - name: Start backend
-  command: "php -S localhost:8000 -t public"
+  command: "php artisan serve --quiet"
   args:
     chdir: "{{ backend_dir }}"
 

@@ -1,0 +1,3 @@
+user: "{{ (lookup('file', '../env/vars.yml') | from_yaml).user }}"
+frontend_dir: "{{ (lookup('file', '../env/vars.yml') | from_yaml).frontend_dir }}"
+frontend_src: "{{ (lookup('file', '../env/vars.yml') | from_yaml).frontend_src }}"
