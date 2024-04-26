@@ -6,5 +6,5 @@
 - hosts: localhost
   vars_files:
     - env/vars.yml
-  gather_facts: false
+  gather_facts: true
   become: true
